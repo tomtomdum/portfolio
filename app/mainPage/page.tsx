@@ -241,7 +241,7 @@ const MainPage = () => {
             </Card>
 
             <Card className='m-4'>
-                <TradeTable columns={columns} data={TradeData} />
+                {/* <TradeTable columns={columns} data={TradeData} /> */}
             </Card>
 
         </main>
