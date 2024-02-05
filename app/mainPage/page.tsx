@@ -16,6 +16,22 @@ import {
 } from "@/components/ui/card"
 
 import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from "@tanstack/react-table"
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+
+import {
     Command,
     CommandEmpty,
     CommandGroup,
@@ -42,10 +58,17 @@ import {
 import { cn } from '@/lib/utils'
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
-import { ColumnDef } from '@tanstack/react-table'
+// import { ColumnDef } from '@tanstack/react-table'
 import APIService from '../api/cryptoCoinsService'
 import { TradeData, PriceData, TradingPair } from '../interfaces/crypto'
 //https://api.coinbase.com/v2/prices/BTC-USD/historic?days=76
+
+export type PaymentTest = {
+    id: string
+    amount: number
+    status: "pending" | "processing" | "success" | "failed"
+    email: string
+}
 
 export const columns: ColumnDef<TradeData>[] = [
     {
@@ -242,6 +265,8 @@ const MainPage = () => {
 
             <Card className='m-4'>
                 {/* <TradeTable columns={columns} data={TradeData} /> */}
+
+
             </Card>
 
         </main>
