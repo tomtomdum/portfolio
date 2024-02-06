@@ -85,7 +85,8 @@ export default function DataTable<TData, TValue>({ columns, data, }: DataTablePr
                         </TableRow>
                     )}
                 </TableBody>
-            </Table> */}
+            </Table> */
+            }
         </div>
     )
 }

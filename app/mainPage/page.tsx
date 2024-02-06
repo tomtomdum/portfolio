@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import TradeTable from '../table/page'
 import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Area } from "recharts";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import {
     Card,
     CardContent,
@@ -17,9 +18,15 @@ import {
 
 import {
     ColumnDef,
+    ColumnFiltersState,
+    SortingState,
     flexRender,
     getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
     useReactTable,
+
 } from "@tanstack/react-table"
 
 import {
@@ -80,16 +87,51 @@ export const columnsTable: ColumnDef<any>[] = [
     },
     {
         accessorKey: 'size',
-        header: 'Size',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Size
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
     },
     {
         accessorKey: 'price',
-        header: 'Price',
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Price
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+
+
     },
     {
         accessorKey: 'time',
-        header: 'Time',
-    },
+
+
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Time
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+
+    }
 ];
 
 const MainPage = () => {
@@ -113,14 +155,27 @@ const MainPage = () => {
         console.log('type', btcPriceHistory)
 
     }
+
+    // table
+    const [sorting, setSorting] = React.useState<SortingState>([])
+
     const data = TradeData
     const columns = columnsTable
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        state: {
+            sorting,
+        },
     })
 
+
+    //
     const { setTheme } = useTheme()
     useEffect(() => {
         const fetchData = async () => {
@@ -318,6 +373,24 @@ const MainPage = () => {
                             )}
                         </TableBody>
                     </Table>
+                    <div className="flex items-center justify-end space-x-2 py-4 mx-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </Card>
 
