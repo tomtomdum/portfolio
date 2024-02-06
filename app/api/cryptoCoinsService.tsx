@@ -11,22 +11,32 @@ class APIService {
      * @returns price history data of bitcoin
      */
     async getCoinPriceHistory(product: string, numberOfDays: string): Promise<PriceData[]> {
-        const res = await fetch('https://api.coinbase.com/v2/prices/' + product + '/historic?days=' + numberOfDays);
-        const jsonData = await res.json();
+        try {
+            const res = await fetch('https://api.coinbase.com/v2/prices/' + product + '/historic?days=' + numberOfDays);
+            const jsonData = await res.json();
 
-        // Extract the prices array from the API response
-        const pricesArray: any[] = jsonData.data.prices;
+            if (!jsonData.data || !jsonData.data.prices) {
+                throw new Error('Prices data not available');
+            }
 
-        // Map and transform the data to conform to the PriceData interface
-        const formattedData: PriceData[] = pricesArray.map((item: any) => ({
-            price: parseFloat(item.price), // Convert the price from string to number
-            time: this.formatTimestamp(item.time), // Format the timestamp to a readable date
-        }));
-        //the data received from the API was formatted recent to old.
-        formattedData.sort((a, b) => a.time.localeCompare(b.time));
+            // Extract the prices array from the API response
+            const pricesArray: any[] = jsonData.data.prices;
 
-        return formattedData;
+            // Map and transform the data to conform to the PriceData interface
+            const formattedData: PriceData[] = pricesArray.map((item: any) => ({
+                price: parseFloat(item.price), // Convert the price from string to number
+                time: this.formatTimestamp(item.time), // Format the timestamp to a readable date
+            }));
+            //the data received from the API was formatted recent to old.
+            formattedData.sort((a, b) => a.time.localeCompare(b.time));
+
+            return formattedData;
+        } catch (error) {
+            console.error('Error fetching coin price history:', error);
+            throw error; // Re-throw the error to handle it outside the function
+        }
     }
+
 
     /**
      * https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproducttrades

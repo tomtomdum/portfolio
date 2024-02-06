@@ -54,7 +54,6 @@ import {
 
 
 
-
 import { cn } from '@/lib/utils'
 import React, { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
@@ -63,14 +62,14 @@ import APIService from '../api/cryptoCoinsService'
 import { TradeData, PriceData, TradingPair } from '../interfaces/crypto'
 //https://api.coinbase.com/v2/prices/BTC-USD/historic?days=76
 
-export type PaymentTest = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
+export type TradeDataCol = {
+    trade_id: number
+    side: string
+    size: number
+    price: number
+    time: string
 }
-
-export const columns: ColumnDef<TradeData>[] = [
+export const columnsTable: ColumnDef<any>[] = [
     {
         accessorKey: 'trade_id',
         header: 'Trade ID',
@@ -95,7 +94,6 @@ export const columns: ColumnDef<TradeData>[] = [
 
 const MainPage = () => {
     const { toast } = useToast()
-
     const [btcPriceHistory, setBtcPriceHistory] = useState<PriceData[]>([]);
     const [products, setProductsArray] = useState<TradingPair[]>([]);
     const [TradeData, setTradeData] = useState<TradeData[]>([]);
@@ -115,8 +113,13 @@ const MainPage = () => {
         console.log('type', btcPriceHistory)
 
     }
-
-
+    const data = TradeData
+    const columns = columnsTable
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
 
     const { setTheme } = useTheme()
     useEffect(() => {
@@ -137,7 +140,7 @@ const MainPage = () => {
         };
 
         fetchData();
-    }, [toast]);
+    }, []);
 
     useEffect(() => {
         console.log('type', btcPriceHistory);
@@ -264,12 +267,61 @@ const MainPage = () => {
             </Card>
 
             <Card className='m-4'>
-                {/* <TradeTable columns={columns} data={TradeData} /> */}
+                {/* <TradeTable data={[{
+                    "trade_id": 4287607,
+                    "side": "buy",
+                    "size": 39,
+                    "price": 0.1268,
+                    "time": "12/31/1969, 7:33:44 PM"
+                }]} columns={columns} /> */}
 
-
+                <div className="--radius --border">
+                    <Table>
+                        <TableHeader>
+                            {table?.getHeaderGroups()?.map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead key={header.id}>
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table?.getRowModel()?.rows?.length ? (
+                                table?.getRowModel()?.rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
             </Card>
 
-        </main>
+        </main >
 
     )
 }
