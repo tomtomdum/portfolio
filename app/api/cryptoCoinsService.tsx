@@ -18,17 +18,17 @@ class APIService {
             if (!jsonData.data || !jsonData.data.prices) {
                 throw new Error('Prices data not available');
             }
-
             // Extract the prices array from the API response
             const pricesArray: any[] = jsonData.data.prices;
 
             // Map and transform the data to conform to the PriceData interface
             const formattedData: PriceData[] = pricesArray.map((item: any) => ({
                 price: parseFloat(item.price), // Convert the price from string to number
-                time: this.formatTimestamp(item.time), // Format the timestamp to a readable date
+                time: this.formatTimestampUNIX(item.time), // Format the timestamp to a readable date
             }));
             //the data received from the API was formatted recent to old.
             formattedData.sort((a, b) => a.time.localeCompare(b.time));
+
 
             return formattedData;
         } catch (error) {
@@ -47,16 +47,13 @@ class APIService {
     async getTradeHistory(product: string, numberOfDays: string,): Promise<TradeData[]> {
         const res = await fetch('https://api.exchange.coinbase.com/products/' + product + '/trades');
         const jsonData = await res.json();
-
         const formattedData: TradeData[] = jsonData.map((item: any) => ({
             trade_id: item.trade_id,
             side: item.side,
             size: parseFloat(item.size),
             price: parseFloat(item.price),
-            time: this.formatTimestamp(item.time), // Assuming you have a function to format timestamps
+            time: this.formatTimestampISO8601(item.time),
         }));
-
-        console.log(formattedData);
 
         return formattedData;
     }
@@ -72,11 +69,53 @@ class APIService {
     }
 
     // Helper function to format Unix timestamp to a readable date
-    formatTimestamp(timestamp: string): string {
-        const date = new Date(parseInt(timestamp) * 1000);
-        return date.toLocaleString();
+    formatTimestampISO8601(timestampISO: string) {
+        const timestampUnix = Date.parse(timestampISO); // Parse ISO 8601 timestamp to Unix timestamp in milliseconds
+
+        const date = new Date(timestampUnix); // Create a Date object using the Unix timestamp
+
+
+        // Extract day, month, and year components in local time zone
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Months are zero-based, so add 1
+        const year = date.getFullYear();
+
+        // Format the date as "day/month/year"
+        const formattedDate = `${day}/${month}/${year}`;
+
+        // Extract hour, minute, and second components in local time zone
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        const second = date.getSeconds();
+
+        // Format the time as "hour:min:sec"
+        const formattedTime = `${hour}:${minute}:${second}`;
+
+        return formattedDate + ' ' + formattedTime;
     }
 
+
+    formatTimestampUNIX(timestamp: number) {
+        const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+
+        // Extract day, month, and year components in local time zone
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Months are zero-based, so add 1
+        const year = date.getFullYear();
+
+        // Format the date as "day/month/year"
+        const formattedDate = `${day}/${month}/${year}`;
+
+        // Extract hour, minute, and second components in local time zone
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        const second = date.getSeconds();
+
+        // Format the time as "hour:min:sec"
+        const formattedTime = `${hour}:${minute}:${second}`;
+
+        return formattedDate + ' ' + formattedTime;
+    }
 
 }
 
