@@ -82,11 +82,10 @@ class APIService {
 
         // Format the date as "day/month/year"
         const formattedDate = `${day}/${month}/${year}`;
-
         // Extract hour, minute, and second components in local time zone
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const second = date.getSeconds();
+        const hour = ("0" + date.getHours()).slice(-2); // Add leading zero if single digit
+        const minute = ("0" + date.getMinutes()).slice(-2); // Add leading zero if single digit
+        const second = ("0" + date.getSeconds()).slice(-2); // Add leading zero if single digit
 
         // Format the time as "hour:min:sec"
         const formattedTime = `${hour}:${minute}:${second}`;
@@ -107,9 +106,9 @@ class APIService {
         const formattedDate = `${day}/${month}/${year}`;
 
         // Extract hour, minute, and second components in local time zone
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const second = date.getSeconds();
+        const hour = ("0" + date.getHours()).slice(-2); // Add leading zero if single digit
+        const minute = ("0" + date.getMinutes()).slice(-2); // Add leading zero if single digit
+        const second = ("0" + date.getSeconds()).slice(-2); // Add leading zero if single digit
 
         // Format the time as "hour:min:sec"
         const formattedTime = `${hour}:${minute}:${second}`;
