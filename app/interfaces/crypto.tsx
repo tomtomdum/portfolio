@@ -27,7 +27,7 @@ export interface TradingPair {
 export interface TradeData {
     trade_id: number;
     side: string;
-    size: string;
-    price: string;
+    size: number;
+    price: number;
     time: string;
 }
