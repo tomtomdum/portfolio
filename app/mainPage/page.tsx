@@ -67,6 +67,7 @@ import { useTheme } from 'next-themes'
 // import { ColumnDef } from '@tanstack/react-table'
 import APIService from '../api/cryptoCoinsService'
 import { TradeData, PriceData, TradingPair } from '../interfaces/crypto'
+import HistoryChart from '../historyChart/page'
 //https://api.coinbase.com/v2/prices/BTC-USD/historic?days=76
 
 export type TradeDataCol = {
@@ -292,9 +293,9 @@ const MainPage = () => {
 
                 </CardHeader>
                 <CardContent>
-                    {/* <HistoryChart priceHistory={btcPriceHistory} /> */}
+                    <HistoryChart priceHistory={btcPriceHistory} />
 
-                    <ResponsiveContainer width="100%" height={400}>
+                    {/* <ResponsiveContainer width="100%" height={400}>
                         <AreaChart
                             width={900}
                             height={250}
@@ -318,7 +319,7 @@ const MainPage = () => {
                                 name="BTC Price"
                             />
                         </AreaChart>
-                    </ResponsiveContainer>
+                    </ResponsiveContainer> */}
                 </CardContent>
                 <CardFooter>
                 </CardFooter>
