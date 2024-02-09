@@ -1,11 +1,7 @@
 "use client"
-import { usePathname, useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Check, ChevronsUpDown, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
-import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Area } from "recharts";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import {
     Card,
     CardContent,
@@ -16,8 +12,6 @@ import {
 } from "@/components/ui/card"
 
 import {
-    ColumnDef,
-    ColumnFiltersState,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -65,75 +59,11 @@ import React, { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 // import { ColumnDef } from '@tanstack/react-table'
 import APIService from '../api/cryptoCoinsService'
-import { TradeData, PriceData, TradingPair } from '../interfaces/crypto'
+import { TradeData, PriceData, TradingPair, columnsTable } from '../interfaces/crypto'
 import HistoryChart from '../historyChart/page'
 import { ScrollArea } from "@/components/ui/scroll-area"
 //https://api.coinbase.com/v2/prices/BTC-USD/historic?days=76
 
-export type TradeDataCol = {
-    trade_id: number
-    side: string
-    size: number
-    price: number
-    time: string
-}
-export const columnsTable: ColumnDef<any>[] = [
-    {
-        accessorKey: 'trade_id',
-        header: 'Trade ID',
-    },
-    {
-        accessorKey: 'side',
-        header: 'Action',
-    },
-    {
-        accessorKey: 'size',
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Size
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: 'price',
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Price
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-
-
-    },
-    {
-        accessorKey: 'time',
-
-
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Time
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-
-    }
-];
 
 const MainPage = () => {
 
@@ -184,15 +114,11 @@ const MainPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-
-
                 const resProducts = await api.fetchProducts();
                 setProductsArray(resProducts);
                 await GetASingleCoin(api, resProducts[0].id)
                 const resTradeHistory = await api.getTradeHistory(resProducts[0].id, '0')
                 setTradeData(resTradeHistory)
-
-
             } catch (error) {
                 console.log(error)
             }
@@ -301,32 +227,6 @@ const MainPage = () => {
                 </CardHeader>
                 <CardContent>
                     <HistoryChart priceHistory={btcPriceHistory} />
-
-                    {/* <ResponsiveContainer width="100%" height={400}>
-                        <AreaChart
-                            width={900}
-                            height={250}
-                            data={btcPriceHistory}
-                            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                        >
-                            <defs>
-                                <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#051aff" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#230ec2" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="time" interval={60} />
-                            <YAxis />
-                            <Tooltip />
-                            <Area
-                                type="monotone"
-                                dataKey="price"
-                                fill="url(#chartColor)" // Set fill color to primary color
-                                name="BTC Price"
-                            />
-                        </AreaChart>
-                    </ResponsiveContainer> */}
                 </CardContent>
                 <CardFooter>
                 </CardFooter>
