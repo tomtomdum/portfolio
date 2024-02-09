@@ -85,9 +85,6 @@ const MainPage = () => {
         const resTradeHistory = await api.getTradeHistory(product, '1')
         setTradeData(resTradeHistory)
         setBtcPriceHistory(priceHistory)
-        console.log('chart', priceHistory)
-        console.log('type', btcPriceHistory)
-
     }
 
     // table
@@ -127,13 +124,10 @@ const MainPage = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        console.log('type', btcPriceHistory);
-    }, [btcPriceHistory]);
     return (
         <main>
             <Card>
-                <Button
+                {/* <Button
                     onClick={() => {
                         toast({
                             title: "Scheduled: Catch up",
@@ -142,7 +136,7 @@ const MainPage = () => {
                     }}
                 >
                     Show Toast
-                </Button>
+                </Button> */}
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -198,13 +192,8 @@ const MainPage = () => {
                                                 key={product.id}
                                                 value={product.id}
                                                 onSelect={async (currentValue) => {
-                                                    console.log(value)
-                                                    console.log(currentValue)
                                                     setValue(currentValue === value ? "" : currentValue);
-
                                                     await GetASingleCoin(api, currentValue)
-
-
                                                     setOpen(false);
                                                 }}
                                             >
