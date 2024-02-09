@@ -117,11 +117,11 @@ export default function DataTable<TData, TValue>({ columns, data, }: DataTablePr
     }, [data]); // Log the data whenever it changes
     return (
         <div>
-            {table?.getHeaderGroups()?.map((headerGroup, index) => (
+            {/* {table?.getHeaderGroups()?.map((headerGroup, index) => (
                 <div key={index}>
                     {headerGroup}
                 </div>
-            ))}
+            ))} */}
         </div>
         // <div className="--radius --border">
         //     <Table>

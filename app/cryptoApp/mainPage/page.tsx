@@ -1,10 +1,9 @@
 "use client"
-
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Check, ChevronsUpDown, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
-import TradeTable from '../table/page'
 import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Area } from "recharts";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import {
@@ -68,6 +67,7 @@ import { useTheme } from 'next-themes'
 import APIService from '../api/cryptoCoinsService'
 import { TradeData, PriceData, TradingPair } from '../interfaces/crypto'
 import HistoryChart from '../historyChart/page'
+import { ScrollArea } from "@/components/ui/scroll-area"
 //https://api.coinbase.com/v2/prices/BTC-USD/historic?days=76
 
 export type TradeDataCol = {
@@ -136,6 +136,9 @@ export const columnsTable: ColumnDef<any>[] = [
 ];
 
 const MainPage = () => {
+
+
+
     const { toast } = useToast()
     const [btcPriceHistory, setBtcPriceHistory] = useState<PriceData[]>([]);
     const [products, setProductsArray] = useState<TradingPair[]>([]);
@@ -260,33 +263,37 @@ const MainPage = () => {
                         <PopoverContent className="w-[200px] p-0">
                             <Command>
                                 <CommandInput placeholder="Search trading pair..." />
-                                <CommandEmpty>No trading pair found.</CommandEmpty>
-                                <CommandGroup>
-                                    {products.map((product) => (
-                                        <CommandItem
-                                            key={product.id}
-                                            value={product.id}
-                                            onSelect={async (currentValue) => {
-                                                console.log(value)
-                                                console.log(currentValue)
-                                                setValue(currentValue === value ? "" : currentValue);
 
-                                                await GetASingleCoin(api, currentValue)
+                                <ScrollArea className="h-[500px]">
+                                    <CommandEmpty>No trading pair found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {products.map((product) => (
+                                            <CommandItem
+                                                key={product.id}
+                                                value={product.id}
+                                                onSelect={async (currentValue) => {
+                                                    console.log(value)
+                                                    console.log(currentValue)
+                                                    setValue(currentValue === value ? "" : currentValue);
+
+                                                    await GetASingleCoin(api, currentValue)
 
 
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            <Check
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    value === product.id ? "opacity-100" : "opacity-0"
-                                                )}
-                                            />
-                                            {product.id}
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        value === product.id ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {product.id}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </ScrollArea>
+
                             </Command>
                         </PopoverContent>
                     </Popover>
