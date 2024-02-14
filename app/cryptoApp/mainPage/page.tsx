@@ -158,7 +158,9 @@ const MainPage = () => {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-
+                <p>
+                    Ce site a été fait dans le but d&apos;apprendre React et NextJs et risque de changer
+                </p>
             </Card>
 
             <Card className='m-4'>
