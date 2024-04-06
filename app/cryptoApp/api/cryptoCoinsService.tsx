@@ -5,6 +5,10 @@ import { PriceData, TradeData, TradingPair } from "../interfaces/crypto";
 
 
 class APIService {
+
+    sum(a: any, b: any) {
+        return a + b;
+    }
     /**
      * 
      * @param numberOfDays range of days to check for price, from today to the past selected day
@@ -16,7 +20,7 @@ class APIService {
             const jsonData = await res.json();
 
             if (!jsonData.data || !jsonData.data.prices) {
-                throw new Error('Prices data not available');
+                throw new Error('Price data not available');
             }
             // Extract the prices array from the API response
             const pricesArray: any[] = jsonData.data.prices;
