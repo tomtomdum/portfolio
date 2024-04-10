@@ -14,6 +14,7 @@ const mockedJsonLinkEur =
             }],
     }
 }
+
 describe('test', () => {
     const api = new APIService()
     it('test', () => {
@@ -67,11 +68,10 @@ describe('fetch crypto price history', () => {
         expect(result).toEqual(expectedData);
     });
 
-    it(' breaks on unsuccessful call', async () => {
-        const result = await api.getCoinPriceHistory('LINK - EUR', '1');
+    it(' breaks on a failed call', async () => {
         fetchMock.mockResolvedValueOnce({
             ok: true,
-            json: jest.fn().mockResolvedValueOnce(mockedJsonLinkEur)
+            json: jest.fn().mockResolvedValueOnce({})
         });
         await expect(api.getCoinPriceHistory('LINK - EUR', '1')).rejects.toThrow('Price data not available');
     });
