@@ -1,0 +1,31 @@
+name: vercel ci/cd
+
+on:
+  pull_requestL
+    branchesL [ master ]
+
+
+jobs:
+  test_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+			- name: Test
+        run: npm test
+
+      - name: Build Next.js application
+        run: npm run build
+
+
+
+
